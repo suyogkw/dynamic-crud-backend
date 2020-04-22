@@ -1,0 +1,13 @@
+{
+  "reference": "students",
+  "queries": {
+    "DATA": "select * from students",
+    "UNIQUE_CLAUSE": "select * from students where name='{server.create_name}' and college='{client.college}'",
+    "IDENTITY_CLAUSE": "select * from students where id={client.id}",
+    "INSERT": "insert into students values((select isnull(max(id), 0) + 1 from students),'{server.create_name}','{client.age}','{client.address}','{client.college}','{server.timestamp}')",
+    "UPDATE": "update students set address = '{client.address}', college = '{client.college}', updated = '{server.timestamp}' where id = {client.id}",
+    "UPDATE_VERIFY": "select * from students where name='{client.name}' and address='{client.address}' and college='{client.college}'",
+    "DELETE": "delete from students where id = {client.id}",
+    "HISTORY": "insert into students_history (action,student_id,name,age,address,college,updated,updatedby,hostname) values('{server.action}',{data.id},'{data.name}','{data.age}','{data.address}','{data.college}','{server.timestamp}','{server.context_user}','{server.hostname}')"
+  }
+}

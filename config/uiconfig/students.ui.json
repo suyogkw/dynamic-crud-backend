@@ -1,0 +1,75 @@
+{
+    "reference": "students",
+    "insert-modal": {
+        "header-text": "create new student data",
+        "button-text": "confirm",
+        "button-class": "modal-btn-green",
+        "confirm-action": "INSERT_ENTITY"
+    },
+    "update-modal": {
+        "header-text": "update student data",
+        "button-text": "confirm",
+        "button-class": "modal-btn-blue",
+        "confirm-action": "UPDATE_ENTITY"
+    },
+    "delete-modal": {
+        "header-text": "delete student data",
+        "button-text": "delete",
+        "button-class": "modal-btn-red",
+        "confirm-action": "DELETE_ENTITY"
+    },
+    "columns": [
+        {
+            "id": "id",
+            "name": "student id",
+            "insert-modal": "hidden",
+            "update-modal": "disabled",
+            "delete-modal": "disabled",
+            "input-type": "text"
+        },
+        {
+            "id": "name",
+            "name": "name",
+            "insert-modal": "enabled",
+            "update-modal": "disabled",
+            "delete-modal": "disabled",
+            "input-type": "text"
+        },
+        {
+            "id": "age",
+            "name": "age",
+            "insert-modal": "enabled",
+            "update-modal": "enabled",
+            "delete-modal": "disabled",
+            "input-type": "text"
+        },
+        {
+            "id": "address",
+            "name": "address",
+            "insert-modal": "enabled",
+            "update-modal": "enabled",
+            "delete-modal": "disabled",
+            "input-type": "textarea"
+        },
+        {
+            "id": "college",
+            "name": "college",
+            "insert-modal": "enabled",
+            "update-modal": "enabled",
+            "delete-modal": "disabled",
+            "input-type": "select",
+            "selection-data": [
+                "college 1",
+                "college 2",
+                "college 3"
+            ]
+        },
+        {
+            "id": "updated",
+            "name": "last updated",
+            "insert-modal": "hidden",
+            "update-modal": "hidden",
+            "delete-modal": "hidden"
+        }
+    ]
+}
