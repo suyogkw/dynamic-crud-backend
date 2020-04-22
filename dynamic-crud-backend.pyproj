@@ -15,7 +15,7 @@
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>dynamic-crud-backend</Name>
     <RootNamespace>dynamic-crud-backend</RootNamespace>
-    <InterpreterId>MSBuild|flask-env|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|crud-env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,7 +27,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
+    <Compile Include="blueprints\crud_blueprint.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="helpers\confighelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\utilities.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="impl\crud_actions.py">
@@ -52,23 +58,23 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="flask-env\">
-      <Id>flask-env</Id>
-      <Version>3.7</Version>
-      <Description>flask-env (Python 3.7 (64-bit))</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
-      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X64</Architecture>
-    </Interpreter>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="config\" />
     <Folder Include="config\uiconfig\" />
     <Folder Include="config\serverconfig\" />
     <Folder Include="blueprints\" />
     <Folder Include="helpers\" />
     <Folder Include="impl\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="crud-env\">
+      <Id>crud-env</Id>
+      <Version>3.7</Version>
+      <Description>crud-env (Python 3.7 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

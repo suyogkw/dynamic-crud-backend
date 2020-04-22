@@ -2,12 +2,13 @@
 import confighelper as config
 import databasehelper
 from serverdatahelper import ServerData
+from utilities import get_sqlquery 
 
 def getall(reference):
     try:
-        getdata_query = config.references[reference].queries.DATA
+        getdata = get_sqlquery(config.references[reference].queries.DATA)
 
-        data = databasehelper.getdata(getdata_query)
+        data = databasehelper.getdata(*getdata)
 
         print("retrieved successfully")
         return True, data
@@ -21,23 +22,23 @@ def insert(reference, client_data):
 
         server_data = ServerData(reference, client_data, 'INSERT')
         ref_queries = config.references[reference].queries
-        unique_check_query = ref_queries.UNIQUE_CLAUSE.format(client=client_data,server=server_data)
-
-        verify = databasehelper.getdata(unique_check_query)
+        q_unique_check = get_sqlquery(ref_queries.UNIQUE_CLAUSE, client=client_data,server=server_data)
+        
+        verify = databasehelper.getdata(*q_unique_check)
         if len(verify)!=0:
             print("uniqueness check failed")
             return False,verify
 
-        insert_query = ref_queries.INSERT.format(client=client_data,server=server_data)
-        databasehelper.execute(insert_query)
+        q_insert = get_sqlquery(ref_queries.INSERT, client=client_data,server=server_data)
+        databasehelper.execute(*q_insert)
 
-        verify = databasehelper.getdata(unique_check_query)        
+        verify = databasehelper.getdata(*q_unique_check)        
         if len(verify) != 1:
             print("insert verification failed")
             return False, verify if len(verify)>1 else None
     
-        loghistory_query = ref_queries.HISTORY.format(data=verify[0],client=client_data,server=server_data)
-        databasehelper.execute(loghistory_query)
+        q_loghistory = get_sqlquery(ref_queries.HISTORY, client=client_data,server=server_data, data=verify[0])
+        databasehelper.execute(*q_loghistory)
 
         print("inserted successfully")
         return True, verify[0]
@@ -51,32 +52,34 @@ def update(reference, client_data):
 
         server_data = ServerData(reference, client_data, 'UPDATE')
         ref_queries = config.references[reference].queries
-        id_check_query = ref_queries.IDENTITY_CLAUSE.format(client=client_data,server=server_data)
 
-        verify_id = databasehelper.getdata(id_check_query)
+        q_id_check = get_sqlquery(ref_queries.IDENTITY_CLAUSE, client=client_data,server=server_data)
+
+        verify_id = databasehelper.getdata(*q_id_check)
         if len(verify_id)!=1:
             print("uniqueness check failed or record doesn't exist")
             return False, verify_id if len(verify_id)>1 else None
 
-        unique_check_query = ref_queries.UNIQUE_CLAUSE.format(client=client_data,server=server_data)
+        q_unique_check = get_sqlquery(ref_queries.UNIQUE_CLAUSE, client=client_data,server=server_data)
 
-        verify = databasehelper.getdata(unique_check_query)
+        verify = databasehelper.getdata(*q_unique_check)
         if len(verify)!=0:
             if len(verify)>1 or (len(verify)==1 and verify[0] != verify_id[0]):
                 print("uniqueness check failed")
                 return False, verify          
 
-        update_query = ref_queries.UPDATE.format(client=client_data,server=server_data)
-        databasehelper.execute(update_query)
+        q_update = get_sqlquery(ref_queries.UPDATE, client=client_data,server=server_data)
+        databasehelper.execute(*q_update)
 
-        update_check_query = ref_queries.UPDATE_VERIFY.format(client=client_data,server=server_data)
-        verify = databasehelper.getdata(update_check_query)        
+        q_update_check = get_sqlquery(ref_queries.UPDATE_VERIFY, client=client_data,server=server_data)
+
+        verify = databasehelper.getdata(*q_update_check)        
         if len(verify) != 1:
             print("update verification failed")
             return False, verify if len(verify)>1 else None
     
-        loghistory_query = ref_queries.HISTORY.format(data=verify[0],client=client_data,server=server_data)
-        databasehelper.execute(loghistory_query)
+        q_loghistory = get_sqlquery(ref_queries.HISTORY, client=client_data,server=server_data, data=verify[0])
+        databasehelper.execute(*q_loghistory)
 
         print("updated successfully")
         return True, verify[0]
@@ -90,23 +93,23 @@ def delete(reference, client_data):
 
         server_data = ServerData(reference, client_data,'DELETE')
         ref_queries = config.references[reference].queries
-        id_check_query = ref_queries.IDENTITY_CLAUSE.format(client=client_data,server=server_data)
+        q_id_check = get_sqlquery(ref_queries.IDENTITY_CLAUSE, client=client_data,server=server_data)
 
-        verify_id = databasehelper.getdata(id_check_query)
+        verify_id = databasehelper.getdata(*q_id_check)
         if len(verify_id)!=1:
             print("uniqueness check failed or record doesn't exist")
             return False, verify_id if len(verify_id)>1 else None
 
-        delete_query = ref_queries.DELETE.format(client=client_data,server=server_data)
-        databasehelper.execute(delete_query)
+        q_delete = get_sqlquery(ref_queries.DELETE, client=client_data,server=server_data)
+        databasehelper.execute(*q_delete)
 
-        verify = databasehelper.getdata(id_check_query)        
+        verify = databasehelper.getdata(*q_id_check)        
         if len(verify) != 0:
             print("delete verification failed")
             return False, verify
     
-        loghistory_query = ref_queries.HISTORY.format(data=verify_id[0],client=client_data,server=server_data)
-        databasehelper.execute(loghistory_query)
+        q_loghistory = get_sqlquery(ref_queries.HISTORY, client=client_data,server=server_data, data=verify_id[0])
+        databasehelper.execute(*q_loghistory)
 
         print("deleted successfully")
         return True, verify_id[0]

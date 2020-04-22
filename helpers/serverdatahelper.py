@@ -22,3 +22,4 @@ class ServerData(object):
     @property
     def create_name(self):
         return self.name
+
